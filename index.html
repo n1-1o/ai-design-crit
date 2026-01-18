@@ -16,6 +16,7 @@
     <!-- Updated Marked Library to ensure compatibility -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <script>
         tailwind.config = {
@@ -182,7 +183,7 @@
         </div>
 
         <div id="inputContainer" class="w-full max-w-2xl transition-all duration-500 animate-fade-in-up animation-delay-200">
-            <div class="bg-white/70 dark:bg-dark-surface/70 backdrop-blur-2xl border border-gray-200 dark:border-dark-border rounded-[2rem] shadow-md dark:shadow-black/15 p-2 flex flex-col gap-1 relative transition-all duration-200 hover:border-primary/50" id="dropArea">
+            <div class="bg-white/70 dark:bg-dark-surface/70 backdrop-blur-2xl border border-gray-200 dark:border-dark-border rounded-[2rem] shadow-md dark:shadow-black/15 p-2 flex flex-col gap-1 relative" id="dropArea">
                 
                 <div class="flex items-center px-5 py-2 gap-4">
                     <span class="material-icons-outlined text-gray-400 text-xl flex-shrink-0">flag</span>
@@ -194,21 +195,18 @@
                 <div class="h-[1px] w-full bg-gray-100 dark:bg-gray-700/50 mx-auto w-[95%]"></div>
 
                 <div class="flex items-center pl-5 pr-2 py-2 gap-4">
-                    <!-- CHANGED: Replaced image icon with attach_file and added tooltip -->
                     <label for="imageUpload" class="cursor-pointer relative group">
                         <span class="material-icons-outlined text-gray-400 text-xl flex-shrink-0 hover:text-primary transition-colors transform rotate-45">attach_file</span>
                         
-                        <!-- Tooltip with adjusted positioning (bottom-full -> bottom-[120%]) -->
                         <div class="absolute bottom-[140%] left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 dark:bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-sm z-20">
                             Attach file (Max 4MB, JPG/PNG)
-                            <!-- Optional: Add a small arrow pointing down -->
                             <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-800 dark:border-t-gray-700"></div>
                         </div>
                     </label>
                     <input type="file" id="imageUpload" accept="image/png, image/jpeg" class="hidden">
                     
                     <input type="url" id="imageUrl" 
-                        placeholder="Paste image URL, click icon, or drag & drop to upload" 
+                        placeholder="Paste image URL or click icon to upload" 
                         class="w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-sm font-light placeholder-gray-400/70 focus:placeholder-transparent text-gray-500 dark:text-gray-400 focus:text-gray-900 focus:dark:text-white transition-colors duration-200 h-10 p-0">
                     
                     <button onclick="analyzeDesign()" id="analyzeBtn"
@@ -224,7 +222,7 @@
                         </div>
                     </button>
                 </div>
-
+                
                 <!-- Drag Overlay -->
                 <div id="dragOverlay" class="absolute inset-0 bg-primary/10 dark:bg-primary/20 backdrop-blur-sm rounded-[2rem] flex items-center justify-center z-10 pointer-events-none opacity-0 transition-opacity duration-200 border-2 border-dashed border-primary">
                     <div class="text-primary font-medium flex flex-col items-center">
@@ -232,6 +230,7 @@
                         <span>Drop image here</span>
                     </div>
                 </div>
+
             </div>
             
             <p class="text-xs text-center mt-6 text-gray-500 dark:text-gray-500 opacity-60 font-mono">
@@ -365,13 +364,18 @@
             <span class="material-icons-outlined text-sm">history</span>
             What's New
         </button>
+        <div class="h-1 w-1 bg-gray-500 rounded-full"></div>
+        <a href="https://github.com/n1-1o/ai-design-crit" target="_blank" class="hover:text-white hover:opacity-100 transition flex items-center gap-1">
+            <i class="fa-brands fa-github text-sm"></i>
+            Star on GitHub
+        </a>
     </footer>
 
     <script>
         // --- CONFIGURATION ---
         // REPLACE THIS WITH YOUR GOOGLE FORM LINK
         const FEEDBACK_FORM_URL = "https://forms.google.com/your-form-link-here"; 
-        const SCALEWAY_FUNCTION_URL = "YOUR_SCALEWAY_FUNCTION_URL_HERE"; 
+        const SCALEWAY_FUNCTION_URL = "https://aidesigncritapp9nkswcw2-ai-design-critic.functions.fnc.fr-par.scw.cloud"; 
 
         document.getElementById('feedbackBtn').href = FEEDBACK_FORM_URL;
 
@@ -585,6 +589,8 @@
             } catch (err) {
                 console.error('Failed to copy', err);
             }
+            
+            document.body.removeChild(textarea);
         }
 
         function setLoadingState(isLoading) {
