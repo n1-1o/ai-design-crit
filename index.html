@@ -1,79 +1,795 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8" />
-  <title>AI Design Crit</title>
-  <style>
-    body {
-      font-family: Inter, system-ui, sans-serif;
-      background: #0f0f0f;
-      color: #fff;
-      padding: 32px;
-      max-width: 720px;
-      margin: auto;
-    }
-    input, textarea, select, button {
-      width: 100%;
-      margin-top: 12px;
-      padding: 12px;
-      background: #1a1a1a;
-      color: #fff;
-      border: 1px solid #333;
-      border-radius: 6px;
-    }
-    button {
-      background: #6cf;
-      color: #000;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .cards button {
-      margin-top: 8px;
-      background: #222;
-      color: #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Crit</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    
+    <!-- VERCEL ANALYTICS (Traffic Tracking) -->
+    <script>
+      window.va = window.va || function () { (window.va.q = window.va.q || []).push(arguments); };
+    </script>
+    <script src="/_vercel/insights/script.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Updated Marked Library to ensure compatibility -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#050505',       
+                            surface: '#121212',  
+                            border: '#27272A',   
+                            text: '#EDEDED'
+                        },
+                        primary: {
+                            DEFAULT: '#D0BCFF',
+                            hover: '#E8DEF8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'blob': 'blob 10s infinite',
+                        'jump': 'jump 1.4s infinite ease-in-out both',
+                        'slide-in-right': 'slideInRight 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        jump: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' } 
+                        },
+                        slideInRight: {
+                            '0%': { transform: 'translateX(100px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-display { font-family: 'Playfair Display', serif; }
+        
+        .animated-bg { background-size: 800% 800%; }
+        
+        /* --- MARKDOWN STYLING FIX --- */
+        .markdown-body { font-size: 14px; color: inherit; } 
+        
+        /* Default (Light Mode) Headings -> Dark Gray */
+        .markdown-body h3 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 1.4rem; 
+            font-weight: 600; 
+            margin-top: 2rem; 
+            margin-bottom: 1rem; 
+            color: #111827; /* Dark Text for Light Mode */
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+        
+        /* Dark Mode Headings -> White */
+        html.dark .markdown-body h3 {
+            color: #F3F4F6;
+        }
+        
+        .markdown-body p { margin-bottom: 1rem; opacity: 0.8; line-height: 1.7; }
+        .markdown-body ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1.5rem; opacity: 0.8; }
+        .markdown-body strong { color: #8B5CF6; font-weight: 600; } /* Violet for Light Mode */
+        html.dark .markdown-body strong { color: #D0BCFF; } /* Light Purple for Dark Mode */
+        
+        /* Tables */
+        .markdown-body table { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1.5rem; }
+        
+        .markdown-body th { 
+            text-align: left; padding: 0.75rem 1rem; 
+            border-bottom: 1px solid #E5E7EB; /* Light border */
+            font-weight: 600; color: #4B5563; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; 
+        }
+        html.dark .markdown-body th {
+            border-bottom: 1px solid #2D2E30;
+            color: #9CA3AF;
+        }
+
+        .markdown-body td { 
+            padding: 0.75rem 1rem; 
+            border-bottom: 1px solid #E5E7EB; /* Light border */
+            white-space: nowrap; 
+        }
+        html.dark .markdown-body td {
+            border-bottom: 1px solid #2D2E30;
+        }
+
+        .markdown-body code { background: rgba(0,0,0,0.05); padding: 0.2em 0.4em; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+        html.dark .markdown-body code { background: rgba(255,255,255,0.1); }
+
+        .animation-delay-200 { animation-delay: 0.2s; }
+        .animation-delay-400 { animation-delay: 0.4s; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #9CA3AF; border-radius: 4px; }
+        html.dark ::-webkit-scrollbar-thumb { background: #444746; }
+        
+        /* HIDE SCROLLBAR FOR LENS LIST */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-dark-text transition-colors duration-300 min-h-screen flex flex-col relative overflow-x-hidden">
 
-<h1>AI Design Critique</h1>
+    <div class="fixed inset-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
+        <div class="absolute bottom-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-purple-500/30 dark:bg-violet-600/40 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] md:blur-[120px] animate-blob"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-cyan-400/30 dark:bg-cyan-500/40 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] md:blur-[120px] animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[70vw] h-[50vw] bg-blue-400/30 dark:bg-blue-600/40 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] md:blur-[120px] animate-blob animation-delay-4000"></div>
+    </div>
 
-<textarea id="goal" placeholder="What should the user successfully do on this screen?"></textarea>
-<input id="image" placeholder="Paste image URL" />
+    <!-- Sticky Feedback Button (Hidden by default) -->
+    <a id="feedbackBtn" href="#" target="_blank" class="fixed bottom-6 right-6 z-50 hidden group">
+        <!-- Tooltip Hint -->
+        <div id="feedbackHint" class="absolute bottom-full right-0 mb-3 px-3 py-2 text-xs font-medium text-white bg-gray-900 dark:bg-gray-800 rounded-lg shadow-xl whitespace-nowrap opacity-0 translate-y-2 transition-all duration-500 pointer-events-none">
+            Help me improve? 👋
+            <div class="absolute -bottom-1 right-4 w-2 h-2 bg-gray-900 dark:bg-gray-800 rotate-45"></div>
+        </div>
+        
+        <!-- The Button -->
+        <div class="bg-white dark:bg-white text-black w-12 h-12 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center justify-center border border-gray-100 dark:border-none">
+            <span class="material-icons-outlined text-xl">chat_bubble_outline</span>
+        </div>
+    </a>
 
-<div class="cards">
-  <p>Refine critique (optional)</p>
-  <button onclick="setLens('ux')">🧭 UX Clarity</button>
-  <button onclick="setLens('conversion')">🎯 Conversion</button>
-  <button onclick="setLens('portfolio')">🎨 Portfolio</button>
-  <button onclick="setLens('senior')">⚡ Brutal Senior</button>
-  <button onclick="setLens('roast')">🔥 Roast</button>
-</div>
+    <!-- Sticky Navigation (Background controlled by JS) -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-50 transition-all duration-300 animate-fade-in-up bg-transparent">
+        <a href="/" class="flex items-center gap-3 opacity-90 hover:opacity-100 transition cursor-pointer group">
+            <img src="logo.png" alt="Design Crit Logo" class="w-8 h-8 rounded-full object-cover group-hover:scale-105 transition-transform shadow-sm border border-white/10">
+            <span class="font-display font-light tracking-tight text-lg">Design Crit</span>
+        </a>
+        <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition focus:outline-none text-gray-600 dark:text-gray-400">
+            <span class="material-icons-outlined" id="themeIcon">light_mode</span>
+        </button>
+    </nav>
 
-<button onclick="submitCrit()">Get critique</button>
+    <main class="flex-grow flex flex-col items-center justify-start pt-[15vh] px-4 sm:px-6 relative z-10">
+        
+        <div id="introHeader" class="text-center max-w-2xl mx-auto mb-12 transition-all duration-500 animate-fade-in-up">
+            <h1 class="text-3xl md:text-4xl font-medium mb-4 bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent pb-2 tracking-tight leading-tight">
+                Instant Design Feedback
+            </h1>
+            <p class="text-xs font-medium opacity-90 dark:text-gray-300 tracking-wide">
+                Upload a screenshot. Get world-class critique.
+            </p>
+        </div>
 
-<pre id="result"></pre>
+        <div id="inputContainer" class="w-full max-w-2xl transition-all duration-500 animate-fade-in-up animation-delay-200 flex flex-col items-center gap-4">
+            
+            <!-- LENS SELECTOR (Moved Above) -->
+            <div class="w-full flex justify-center overflow-x-auto no-scrollbar pb-2 px-1">
+                <div class="flex gap-3" id="lensContainer">
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
 
-<script>
-let lens = "ux";
+            <div class="bg-white/70 dark:bg-dark-surface/70 backdrop-blur-2xl border border-gray-200 dark:border-dark-border rounded-[2rem] shadow-md dark:shadow-black/15 p-2 flex flex-col gap-1 relative w-full" id="dropArea">
+                
+                <div class="flex items-center px-5 py-2 gap-4">
+                    <span class="material-icons-outlined text-gray-400 text-xl flex-shrink-0">flag</span>
+                    <input type="text" id="userGoal" 
+                        placeholder="What should the user successfully do on this screen? (e.g. 'Sign up')" 
+                        class="w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-sm font-light placeholder-gray-400/70 focus:placeholder-transparent text-gray-500 dark:text-gray-400 focus:text-gray-900 focus:dark:text-white transition-colors duration-200 h-10 p-0">
+                </div>
 
-function setLens(l) {
-  lens = l;
-}
+                <div class="h-[1px] w-full bg-gray-100 dark:bg-gray-700/50 mx-auto w-[95%]"></div>
 
-async function submitCrit() {
-  const res = await fetch("/critique", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      user_goal: document.getElementById("goal").value,
-      image_url: document.getElementById("image").value,
-      lens
-    })
-  });
-  document.getElementById("result").textContent = await res.text();
-}
-</script>
+                <div class="flex items-center pl-5 pr-2 py-2 gap-4">
+                    <label for="imageUpload" class="cursor-pointer relative group">
+                        <span class="material-icons-outlined text-gray-400 text-xl flex-shrink-0 hover:text-primary transition-colors transform rotate-45">attach_file</span>
+                        
+                        <div class="absolute bottom-[140%] left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 dark:bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-sm z-20">
+                            Attach file (Max 4MB, JPG/PNG)
+                            <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-800 dark:border-t-gray-700"></div>
+                        </div>
+                    </label>
+                    <input type="file" id="imageUpload" accept="image/png, image/jpeg" class="hidden">
+                    
+                    <input type="url" id="imageUrl" 
+                        placeholder="Paste image URL or click icon to upload" 
+                        class="w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-sm font-light placeholder-gray-400/70 focus:placeholder-transparent text-gray-500 dark:text-gray-400 focus:text-gray-900 focus:dark:text-white transition-colors duration-200 h-10 p-0">
+                    
+                    <button onclick="analyzeDesign()" id="analyzeBtn"
+                        class="w-12 h-12 rounded-full bg-black dark:bg-white text-white dark:text-black hover:scale-105 transition-all shadow-lg flex items-center justify-center flex-shrink-0 group ml-auto relative overflow-hidden">
+                        
+                        <span id="btnIcon" class="material-icons-outlined text-xl transition-transform duration-300">arrow_forward</span>
+                        
+                        <div id="loadingSpinner" class="absolute inset-0 rounded-full border-2 border-white/20 border-t-white hidden"></div>
+                        <div id="loadingDots" class="absolute inset-0 flex items-center justify-center gap-1 hidden">
+                            <div class="w-1 h-1 bg-white rounded-full animate-jump"></div>
+                            <div class="w-1 h-1 bg-white rounded-full animate-jump animation-delay-200"></div>
+                            <div class="w-1 h-1 bg-white rounded-full animate-jump animation-delay-400"></div>
+                        </div>
+                    </button>
+                </div>
+                
+                <!-- Drag Overlay -->
+                <div id="dragOverlay" class="absolute inset-0 bg-primary/10 dark:bg-primary/20 backdrop-blur-sm rounded-[2rem] flex items-center justify-center z-10 pointer-events-none opacity-0 transition-opacity duration-200 border-2 border-dashed border-primary">
+                    <div class="text-primary font-medium flex flex-col items-center">
+                        <span class="material-icons-outlined text-4xl mb-2">cloud_upload</span>
+                        <span>Drop image here</span>
+                    </div>
+                </div>
 
+            </div>
+            
+        </div>
+
+        <div id="errorBox" class="hidden w-full max-w-xl mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 flex items-start gap-3 backdrop-blur-sm mx-auto">
+            <span class="material-icons-outlined text-xl mt-0.5">error_outline</span>
+            <span id="errorText" class="text-sm font-medium">Something went wrong.</span>
+        </div>
+
+        <div id="resultSection" class="hidden w-full max-w-3xl -mt-[6vh] mb-20">
+            <div class="bg-white/90 dark:bg-dark-surface/95 backdrop-blur-xl rounded-3xl p-8 md:p-10 shadow-lg border border-gray-100 dark:border-dark-border">
+                <div class="flex justify-between items-center mb-8 border-b border-gray-100 dark:border-gray-800 pb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-purple-600 dark:text-purple-300">
+                            <span class="material-icons-outlined">psychology</span>
+                        </div>
+                        <h2 class="text-xl font-bold font-display tracking-tight">Critique Results</h2>
+                    </div>
+                    
+                    <div class="flex items-center gap-6">
+                        <div class="relative group flex items-center justify-center">
+                            <button onclick="shareResult()" id="shareBtn" class="w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-purple-500 transition flex items-center justify-center">
+                                <span class="material-icons-outlined text-xl">ios_share</span> 
+                            </button>
+                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 dark:bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-0 pointer-events-none whitespace-nowrap shadow-sm z-20">
+                                Share Result
+                            </div>
+                        </div>
+
+                        <div class="relative group flex items-center justify-center">
+                            <button onclick="copyToClipboard()" id="copyBtn" class="w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-purple-500 transition flex items-center justify-center">
+                                <span class="material-icons-outlined text-xl">content_copy</span> 
+                            </button>
+                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 dark:bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-0 pointer-events-none whitespace-nowrap shadow-sm z-20">
+                                Copy Text
+                            </div>
+                        </div>
+
+                        <div class="relative group flex items-center justify-center">
+                            <button onclick="resetApp()" class="w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-purple-500 transition flex items-center justify-center">
+                                <span class="material-icons-outlined text-xl">add</span>
+                            </button>
+                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 dark:bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-0 pointer-events-none whitespace-nowrap shadow-sm z-20">
+                                Start New Analysis
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="markdownOutput" class="markdown-body text-left leading-relaxed text-gray-700 dark:text-gray-300 font-light">
+                    <!-- AI content goes here -->
+                </div>
+                
+                <!-- RERUN WITH NEW LENS -->
+                <div class="mt-12 pt-8 border-t border-gray-100 dark:border-gray-800">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4 text-center">View this design through another lens</p>
+                    <div class="flex justify-center overflow-x-auto no-scrollbar pb-2 px-4">
+                        <div class="flex gap-3" id="lensContainerResult">
+                            <!-- Cards injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- CHANGELOG MODAL OVERLAY -->
+    <div id="changelogModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleChangelog()"></div>
+        
+        <!-- Modal Content -->
+        <div class="relative bg-white dark:bg-dark-surface w-full max-w-lg mx-4 rounded-3xl shadow-2xl border border-gray-200 dark:border-dark-border overflow-hidden animate-fade-in-up">
+            <div class="p-6 border-b border-gray-100 dark:border-dark-border flex justify-between items-center">
+                <h3 class="text-xl font-bold font-display text-gray-900 dark:text-white">What's New</h3>
+                <button onclick="toggleChangelog()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white transition">
+                    <span class="material-icons-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 max-h-[60vh] overflow-y-auto">
+                
+                <!-- Update Item 1 -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 text-xs font-bold px-2 py-1 rounded-full">v1.3</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">December 2025</span>
+                    </div>
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Major AI Upgrade: Llama 3.2 Vision</h4>
+                    <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                        <li><strong>Reduced Hallucinations:</strong> Switched model from Pixtral 12B to <strong>Llama 3.2 11B Vision Instruct</strong>.</li>
+                        <li><strong>Better Accuracy:</strong> The new model reads text on screens (OCR) significantly better, reducing "guessed" labels.</li>
+                        <li><strong>Grounded Critiques:</strong> Prompt engineering updated to force the AI to list "evidence" (what it actually sees) before critiquing.</li>
+                    </ul>
+                </div>
+
+                <!-- Update Item 2 -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 text-xs font-bold px-2 py-1 rounded-full">v1.2</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">November 2025</span>
+                    </div>
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Enhanced Visuals & UX</h4>
+                    <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                        <li>New "Northern Lights" animated background.</li>
+                        <li>Improved typography (Outfit font) for better readability.</li>
+                        <li>Instant tooltips for better navigation.</li>
+                        <li>Reduced visual clutter in the search bar.</li>
+                    </ul>
+                </div>
+
+                <!-- Update Item 3 -->
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold px-2 py-1 rounded-full">v1.0</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">September 2025</span>
+                    </div>
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Initial Launch</h4>
+                    <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                        <li>Serverless architecture on Scaleway.</li>
+                        <li>Instant analysis via Pixtral 12B model.</li>
+                        <li>Zero-cost deployment stack.</li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="p-6 bg-gray-50 dark:bg-black/20 border-t border-gray-100 dark:border-dark-border text-center">
+                <p class="text-xs text-gray-500">Have a feature request? <a href="#" onclick="document.getElementById('feedbackBtn').click(); toggleChangelog(); return false;" class="text-purple-500 hover:underline">Let us know.</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full p-6 flex justify-center items-center gap-6 text-xs opacity-40 z-10">
+        <p>&copy; 2025 <a href="https://www.linkedin.com/in/nguyentran-ngo/" target="_blank" class="hover:text-purple-400 hover:underline transition">Nguyen Tran-Ngo</a>. Powered by Scaleway.</p>
+        <div class="h-1 w-1 bg-gray-500 rounded-full"></div>
+        <button onclick="toggleChangelog()" class="hover:text-white hover:opacity-100 transition flex items-center gap-1">
+            <span class="material-icons-outlined text-sm">history</span>
+            What's New
+        </button>
+    </footer>
+
+    <script>
+        // --- CONFIGURATION ---
+        // REPLACE THIS WITH YOUR GOOGLE FORM LINK
+        const FEEDBACK_FORM_URL = "https://forms.google.com/your-form-link-here"; 
+        const SCALEWAY_FUNCTION_URL = "https://aidesigncritapp9nkswcw2-ai-design-critic.functions.fnc.fr-par.scw.cloud"; 
+
+        document.getElementById('feedbackBtn').href = FEEDBACK_FORM_URL;
+
+        let resultsLoaded = false;
+        let currentCritiqueText = ""; // Store for sharing
+        let currentImageBase64 = ""; // NEW: Variable to store uploaded image
+
+        // --- URL PARAMETER CHECK (Shared State) ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedId = urlParams.get('id');
+
+            if (sharedId) {
+                // Try to load from localStorage based on ID
+                // Note: For a real app, this would fetch from a database. 
+                // Since we are Zero-Cost/No-DB, we simulate it. 
+                
+                const savedData = localStorage.getItem('designcrit_' + sharedId);
+                if (savedData) {
+                    const parsed = JSON.parse(savedData);
+                    showResults(parsed.text);
+                }
+            }
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.textContent = 'dark_mode';
+                localStorage.theme = 'light';
+            } else {
+                html.classList.add('dark');
+                icon.textContent = 'light_mode';
+                localStorage.theme = 'dark';
+            }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('themeIcon').textContent = 'light_mode';
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.getElementById('themeIcon').textContent = 'dark_mode';
+        }
+
+        // Changelog Toggle Logic
+        function toggleChangelog() {
+            const modal = document.getElementById('changelogModal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            } else {
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+        }
+
+        document.getElementById('userGoal').addEventListener('keypress', function (e) { if (e.key === 'Enter') analyzeDesign(); });
+        document.getElementById('imageUrl').addEventListener('keypress', function (e) { if (e.key === 'Enter') analyzeDesign(); });
+        
+        // Handle file upload
+        const fileInput = document.getElementById('imageUpload');
+        fileInput.addEventListener('change', handleFileUpload);
+        
+        // Drag and drop support
+        const dropArea = document.getElementById('dropArea');
+        const dragOverlay = document.getElementById('dragOverlay');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dragOverlay.classList.remove('opacity-0');
+        }
+
+        function unhighlight(e) {
+            dragOverlay.classList.add('opacity-0');
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFileUpload({ target: { files: files } });
+        }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                const base64String = event.target.result;
+                
+                // For simplicity, we can put the base64 string into the input field
+                // However, base64 strings are huge, so it's better to store it in a variable
+                // and maybe show a "File Selected" text in the input
+                document.getElementById('imageUrl').value = "Image Uploaded Successfully";
+                document.getElementById('imageUrl').dataset.base64 = base64String;
+                currentImageBase64 = base64String; // NEW: Set the global variable
+                
+                // Optional: Auto-submit or focus on goal input
+                document.getElementById('userGoal').focus();
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // --- LENS LOGIC ---
+        let activeLens = "ux_clarity";
+
+        const LENSES = [
+            { id: 'ux_clarity', label: '🧭 UX Clarity', desc: 'Default' },
+            { id: 'conversion', label: '🎯 Conversion', desc: 'Action' },
+            { id: 'visual', label: '🎨 Visual Polish', desc: 'Aesthetics' },
+            { id: 'senior', label: '⚡ Senior Crit', desc: 'Deep' },
+            { id: 'roast', label: '🔥 Roast Mode', desc: 'Ruthless' }
+        ];
+
+        function renderLenses(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            LENSES.forEach(lens => {
+                const isSelected = lens.id === activeLens;
+                const btn = document.createElement('button');
+                // CHANGED: Rounded-lg instead of rounded-full, transparent/faint bg
+                btn.className = `px-4 py-2 rounded-lg text-xs font-medium transition-all duration-200 border whitespace-nowrap ${isSelected 
+                    ? 'bg-white/10 dark:bg-white/10 text-black dark:text-white border-white/50' 
+                    : 'bg-transparent border-gray-200/20 dark:border-white/5 hover:bg-white/5 text-gray-600 dark:text-gray-300'}`;
+                btn.innerText = lens.label;
+                btn.onclick = () => selectLens(lens.id);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectLens(id) {
+            activeLens = id;
+            renderLenses('lensContainer');
+            renderLenses('lensContainerResult');
+            
+            // If results are already loaded, trigger rerun
+            const urlInput = document.getElementById('imageUrl');
+            let imageUrl = urlInput.value;
+            // Check global or input for image
+            if (imageUrl === "Image Uploaded Successfully" && currentImageBase64) imageUrl = currentImageBase64;
+            else if (!imageUrl && currentImageBase64) imageUrl = currentImageBase64;
+            
+            if (resultsLoaded && imageUrl) {
+                analyzeDesign();
+            }
+        }
+        
+        // Init Lenses
+        renderLenses('lensContainer');
+        renderLenses('lensContainerResult');
+
+
+        // --- SCROLL DETECTION LOGIC ---
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            const navbar = document.getElementById('navbar');
+            const feedbackBtn = document.getElementById('feedbackBtn');
+            const feedbackHint = document.getElementById('feedbackHint');
+
+            // NAV BACKGROUND LOGIC
+            if (scrollPosition > 20) {
+                navbar.classList.add('backdrop-blur-md', 'bg-white/70', 'dark:bg-black/50', 'border-b', 'border-white/10');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('backdrop-blur-md', 'bg-white/70', 'dark:bg-black/50', 'border-b', 'border-white/10');
+                navbar.classList.add('bg-transparent');
+            }
+
+            // FEEDBACK BUTTON LOGIC
+            if (!resultsLoaded) return;
+            
+            if (scrollPosition > 300) {
+                feedbackBtn.classList.remove('hidden');
+                feedbackBtn.classList.add('animate-slide-in-right');
+                
+                if (!feedbackBtn.dataset.hintShown) {
+                    setTimeout(() => {
+                        feedbackHint.classList.remove('opacity-0', 'translate-y-2');
+                    }, 500);
+                    
+                    setTimeout(() => {
+                        feedbackHint.classList.add('opacity-0', 'translate-y-2');
+                    }, 6000);
+                    
+                    feedbackBtn.dataset.hintShown = "true";
+                }
+            }
+        });
+
+        // --- SHARE LOGIC ---
+        async function shareResult() {
+            const id = Date.now().toString(36);
+            
+            localStorage.setItem('designcrit_' + id, JSON.stringify({
+                text: currentCritiqueText,
+                date: new Date().toISOString()
+            }));
+
+            const url = `${window.location.origin}/?id=${id}`;
+
+            try {
+                await navigator.clipboard.writeText(url);
+                
+                const btn = document.getElementById('shareBtn');
+                const icon = btn.querySelector('.material-icons-outlined');
+                icon.textContent = 'check';
+                btn.classList.remove('text-gray-400', 'hover:text-purple-500');
+                btn.classList.add('text-green-500');
+                
+                setTimeout(() => {
+                    icon.textContent = 'ios_share';
+                    btn.classList.add('text-gray-400', 'hover:text-purple-500');
+                    btn.classList.remove('text-green-500');
+                }, 2000);
+
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+        }
+
+        async function copyToClipboard() {
+            // Get only the raw text content without HTML tags or Markdown formatting
+            const text = document.getElementById('markdownOutput').innerText; 
+            const btn = document.getElementById('copyBtn');
+            const icon = btn.querySelector('.material-icons-outlined');
+
+            try {
+                await navigator.clipboard.writeText(text);
+                icon.textContent = 'check';
+                btn.classList.remove('text-gray-400', 'hover:text-purple-500');
+                btn.classList.add('text-green-500');
+                
+                setTimeout(() => {
+                    icon.textContent = 'content_copy';
+                    btn.classList.add('text-gray-400', 'hover:text-purple-500');
+                    btn.classList.remove('text-green-500');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        function setLoadingState(isLoading) {
+            const btn = document.getElementById('analyzeBtn');
+            const icon = document.getElementById('btnIcon');
+            const spinner = document.getElementById('loadingSpinner');
+            const dots = document.getElementById('loadingDots');
+            const inputContainer = document.getElementById('inputContainer');
+
+            if (isLoading) {
+                btn.disabled = true;
+                btn.classList.remove('bg-black', 'dark:bg-white', 'text-white', 'dark:text-black', 'hover:scale-105');
+                btn.classList.add('bg-zinc-500', 'dark:bg-zinc-600', 'cursor-not-allowed');
+                
+                icon.classList.add('hidden');
+                spinner.classList.remove('hidden');
+                spinner.classList.add('animate-spin');
+                dots.classList.remove('hidden');
+                
+                inputContainer.classList.add('pointer-events-none', 'opacity-80');
+            } else {
+                btn.disabled = false;
+                btn.classList.add('bg-black', 'dark:bg-white', 'text-white', 'dark:text-black', 'hover:scale-105');
+                btn.classList.remove('bg-zinc-500', 'dark:bg-zinc-600', 'cursor-not-allowed');
+                
+                icon.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                spinner.classList.remove('animate-spin');
+                dots.classList.add('hidden');
+                
+                inputContainer.classList.remove('pointer-events-none', 'opacity-80');
+            }
+        }
+
+        function showResults(markdownText) {
+            currentCritiqueText = markdownText;
+
+            document.getElementById('introHeader').classList.add('hidden');
+            document.getElementById('inputContainer').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+            
+            let cleanMarkdown = markdownText.replace(/^```markdown\n/, '').replace(/^```\n/, '').replace(/\n```$/, '');
+            document.getElementById('markdownOutput').innerHTML = marked.parse(cleanMarkdown);
+            resultsLoaded = true;
+        }
+
+        async function analyzeDesign() {
+            const goal = document.getElementById('userGoal').value;
+            const urlInput = document.getElementById('imageUrl');
+            let imageUrl = urlInput.value;
+            
+            // Check if base64 data exists
+            if (imageUrl === "Image Uploaded Successfully" && currentImageBase64) {
+                 imageUrl = currentImageBase64;
+            } else if (currentImageBase64) {
+                // Fallback to global variable if re-running
+                imageUrl = currentImageBase64;
+            }
+
+            const errorBox = document.getElementById('errorBox');
+            errorBox.classList.add('hidden');
+            
+            if (!imageUrl) { showError("Please paste an image URL or upload a file."); return; }
+            if (SCALEWAY_FUNCTION_URL.includes("YOUR_SCALEWAY")) { showError("Setup Error: Scaleway URL missing in code."); return; }
+
+            setLoadingState(true);
+
+            try {
+                const response = await fetch(SCALEWAY_FUNCTION_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        user_goal: goal, 
+                        image_url: imageUrl,
+                        lens: activeLens 
+                    })
+                });
+
+                const data = await response.json();
+
+                setLoadingState(false);
+
+                if (!response.ok) throw new Error(data.error || "Server error");
+
+                if (data.critique) {
+                    showResults(data.critique);
+                } else { throw new Error("No critique returned."); }
+            } catch (error) {
+                setLoadingState(false);
+                showError(error.message);
+            }
+        }
+
+        function showError(msg) {
+            const errorBox = document.getElementById('errorBox');
+            document.getElementById('errorText').textContent = msg;
+            errorBox.classList.remove('hidden');
+        }
+
+        function resetApp() {
+            resultsLoaded = false; 
+            currentCritiqueText = "";
+            activeLens = "ux_clarity"; renderLenses('lensContainer'); // Reset lens
+            document.getElementById('feedbackBtn').classList.add('hidden'); 
+            document.getElementById('feedbackBtn').dataset.hintShown = ""; 
+            
+            window.history.pushState({}, document.title, "/");
+
+            const resultSection = document.getElementById('resultSection');
+            const intro = document.getElementById('introHeader');
+            const input = document.getElementById('inputContainer');
+            
+            // Reset input values and data attributes
+            document.getElementById('userGoal').value = '';
+            const urlInput = document.getElementById('imageUrl');
+            urlInput.value = '';
+            delete urlInput.dataset.base64;
+            document.getElementById('imageUpload').value = ''; // Reset file input
+            currentImageBase64 = "";
+
+            resultSection.classList.remove('animate-fade-in-up');
+            resultSection.classList.add('transition-all', 'duration-[400ms]', 'opacity-0', 'translate-y-4');
+            setTimeout(() => {
+                resultSection.classList.add('hidden');
+                resultSection.classList.remove('transition-all', 'duration-[400ms]', 'opacity-0', 'translate-y-4');
+                intro.classList.remove('hidden');
+                input.classList.remove('hidden');
+                void intro.offsetWidth;
+                intro.classList.remove('opacity-0', '-translate-y-4');
+                input.classList.remove('opacity-0', 'scale-95');
+                document.getElementById('userGoal').value = '';
+                document.getElementById('imageUrl').value = '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 400);
+        }
+    </script>
 </body>
 </html>
