@@ -1,8 +1,4 @@
-import zipfile
-import os
 
-# 1. The Handler Code
-handler_code = """
 import os
 import json
 import logging
@@ -18,7 +14,7 @@ SCW_API_KEY = os.environ.get("SCW_SECRET_KEY")
 API_URL = "https://api.scaleway.ai/v1/chat/completions"
 
 # --- CANONICAL BASE PROMPT ---
-BASE_SYSTEM_PROMPT = \"\"\"
+BASE_SYSTEM_PROMPT = """
 You are a Product Design Leader with extensive experience at top-tier tech companies.
 You are empathetic but rigorous.
 Your role is to deliver clear, high-signal design critique that helps a mid-level designer improve their work.
@@ -79,31 +75,31 @@ VISUAL RULES (CRITICAL)
    - <span style="color: #ef4444; font-weight: bold;">High Severity</span> (Red)
    - <span style="color: #eab308; font-weight: bold;">Medium Severity</span> (Yellow)
    - <span style="color: #22c55e; font-weight: bold;">Strength</span> (Green)
-\"\"\"
+"""
 
 # --- LENS DEFINITIONS ---
 LENSES = {
-    "ux_clarity": \"\"\"
+    "ux_clarity": """
 Critique Lens: UX Clarity Check
 Review this design as if it were being evaluated in a standard product design critique.
 Prioritize clarity, usability, and comprehension for a first-time user.
 Focus on information hierarchy, interaction clarity, and friction.
 Avoid performance, persuasion, or business optimization unless they directly impact usability.
-\"\"\",
-    "conversion": \"\"\"
+""",
+    "conversion": """
 Critique Lens: Conversion Review
 Focus entirely on action & persuasion.
 Does the design drive the user to the goal?
 Identify friction points that kill conversion.
 Critique the strength and placement of CTAs.
-\"\"\",
-    "visual": \"\"\"
+""",
+    "visual": """
 Critique Lens: Visual Polish & Portfolio
 Focus on aesthetics, typography, spacing, and grid.
 Treat this as a visual design review for a senior portfolio.
 Point out misalignment, inconsistent margins, and poor font choices.
-\"\"\",
-    "roast": \"\"\"
+""",
+    "roast": """
 Critique Lens: Roast Mode
 
 Be ruthless, sharp, and unapologetically honest.
@@ -124,7 +120,7 @@ Do NOT overexplain.
 Do NOT praise unless it is genuinely exceptional.
 
 This is meant to be entertaining, memorable, and brutally educational.
-\"\"\"
+"""
 }
 
 def handle(event, context):
@@ -164,7 +160,7 @@ def handle(event, context):
 
         # 4. Construct Prompt
         lens_instruction = LENSES.get(lens_id, "")
-        full_system_prompt = f"{BASE_SYSTEM_PROMPT}\\n\\n--- LENS INSTRUCTION ---\\n{lens_instruction}"
+        full_system_prompt = f"{BASE_SYSTEM_PROMPT}\n\n--- LENS INSTRUCTION ---\n{lens_instruction}"
 
         logger.info(f"Analyzing with Lens: {lens_id}")
 
@@ -234,19 +230,3 @@ def handle(event, context):
                 "details": "Check Function Logs"
             })
         }
-"""
-
-with open("handler.py", "w") as f:
-    f.write(handler_code)
-
-with open("requirements.txt", "w") as f:
-    f.write("\n") 
-
-with zipfile.ZipFile("deploy_package.zip", "w") as zipf:
-    zipf.write("handler.py")
-    zipf.write("requirements.txt")
-
-print("-" * 30)
-print(f"SUCCESS! Created deploy_package.zip")
-print("Upload this to Scaleway and deploy.")
-print("-" * 30)
