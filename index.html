@@ -209,6 +209,7 @@
                     <label for="imageUpload" class="cursor-pointer relative group">
                         <span class="material-icons-outlined text-gray-400 text-xl flex-shrink-0 hover:text-primary transition-colors transform rotate-45">attach_file</span>
                         
+                        <!-- Tooltip with adjusted positioning (bottom-full -> bottom-[120%]) -->
                         <div class="absolute bottom-[140%] left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 dark:bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-sm z-20">
                             Attach file (Max 4MB, JPG/PNG)
                             <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-800 dark:border-t-gray-700"></div>
@@ -243,7 +244,7 @@
                 </div>
 
             </div>
-            
+
         </div>
 
         <div id="errorBox" class="hidden w-full max-w-xl mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 flex items-start gap-3 backdrop-blur-sm mx-auto">
@@ -328,13 +329,12 @@
                 <div class="mb-8">
                     <div class="flex items-center gap-3 mb-2">
                         <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 text-xs font-bold px-2 py-1 rounded-full">v1.3</span>
-                        <span class="text-sm text-gray-500 dark:text-gray-400">December 2025</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">January 2026</span>
                     </div>
-                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Major AI Upgrade: Llama 3.2 Vision</h4>
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Multi-Lens Analysis</h4>
                     <ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                        <li><strong>Reduced Hallucinations:</strong> Switched model from Pixtral 12B to <strong>Llama 3.2 11B Vision Instruct</strong>.</li>
-                        <li><strong>Better Accuracy:</strong> The new model reads text on screens (OCR) significantly better, reducing "guessed" labels.</li>
-                        <li><strong>Grounded Critiques:</strong> Prompt engineering updated to force the AI to list "evidence" (what it actually sees) before critiquing.</li>
+                        <li><strong>Lens Selector:</strong> Choose from UX Clarity, Conversion, Visual, Senior, or Roast mode.</li>
+                        <li><strong>Rerun Feature:</strong> Instantly re-analyze the same design with a different persona without re-uploading.</li>
                     </ul>
                 </div>
 
