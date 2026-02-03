@@ -1,10 +1,13 @@
+import zipfile
+import os
 
+# 1. The Handler Code
+handler_code = """
 import os
 import json
 import logging
 import urllib.request
 import urllib.error
-import traceback
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
@@ -14,7 +17,7 @@ SCW_API_KEY = os.environ.get("SCW_SECRET_KEY")
 API_URL = "https://api.scaleway.ai/v1/chat/completions"
 
 # --- CANONICAL BASE PROMPT ---
-BASE_SYSTEM_PROMPT = """
+BASE_SYSTEM_PROMPT = \"\"\"
 You are a Product Design Leader with extensive experience at top-tier tech companies.
 You are empathetic but rigorous.
 Your role is to deliver clear, high-signal design critique that helps a mid-level designer improve their work.
@@ -75,52 +78,56 @@ VISUAL RULES (CRITICAL)
    - <span style="color: #ef4444; font-weight: bold;">High Severity</span> (Red)
    - <span style="color: #eab308; font-weight: bold;">Medium Severity</span> (Yellow)
    - <span style="color: #22c55e; font-weight: bold;">Strength</span> (Green)
-"""
+\"\"\"
 
 # --- LENS DEFINITIONS ---
 LENSES = {
-    "ux_clarity": """
+    "ux_clarity": \"\"\"
 Critique Lens: UX Clarity Check
 Review this design as if it were being evaluated in a standard product design critique.
 Prioritize clarity, usability, and comprehension for a first-time user.
 Focus on information hierarchy, interaction clarity, and friction.
 Avoid performance, persuasion, or business optimization unless they directly impact usability.
-""",
-    "conversion": """
-Critique Lens: Conversion Review
-Focus entirely on action & persuasion.
-Does the design drive the user to the goal?
-Identify friction points that kill conversion.
-Critique the strength and placement of CTAs.
-""",
-    "visual": """
+\"\"\",
+    "conversion": \"\"\"
+Critique Lens: Conversion Review (Growth Designer & PM Perspective)
+
+Adopt the persona of a Growth Designer and Product Manager focused on **metrics, funnel optimization, and user activation**.
+
+Your goal is to identify barriers to conversion and opportunities to drive the primary user action.
+- **Friction Hunting:** Where will the user drop off? Is the path to value clear and unobstructed?
+- **Value Proposition:** Is the "Why" immediately obvious above the fold? Does the copy sell the benefit, not just the feature?
+- **CTA Strength:** Are the Calls to Action (CTAs) visually distinct, actionable, and placed at moments of high intent?
+- **Trust & Social Proof:** Is there sufficient reassurance (reviews, logos, security badges) to reduce hesitation?
+- **Cognitive Load:** Is the page asking for too much too soon? (e.g., long forms, too many choices).
+
+Focus your feedback on increasing the **conversion rate** and **reducing time-to-value**.
+\"\"\",
+    "visual": \"\"\"
 Critique Lens: Visual Polish & Portfolio
 Focus on aesthetics, typography, spacing, and grid.
 Treat this as a visual design review for a senior portfolio.
 Point out misalignment, inconsistent margins, and poor font choices.
-""",
-    "roast": """
-Critique Lens: Roast Mode
+\"\"\",
+    "roast": \"\"\"
+Critique Lens: Roast Mode (Humorous & Sarcastic)
 
-Be ruthless, sharp, and unapologetically honest.
-Treat this as a public roast, not a polite critique.
+Adopt the persona of a witty, slightly cynical, but ultimately helpful Design Director (think Anthony Bourdain meets Gordon Ramsay, but for pixels).
 
-Identify:
-- Amateur mistakes
-- Lazy decisions
-- Clichés
-- Visual confusion
-- Weak hierarchy
-- Empty aesthetics pretending to be “clean”
+Your goal is to be **entertaining and sarcastic**, but NOT mean or offensive.
+- Use metaphors and colorful language to describe design failures.
+- Poke fun at clichés (e.g., "This drop shadow is deeper than my existential dread").
+- Call out "lazy" decisions with wit.
+- **CRITICAL:** Do NOT be toxic, abusive, or discouraging. The user should laugh *and* learn.
 
-Use blunt, punchy language.
-Call out bad design choices clearly and directly.
-Do NOT soften feedback.
-Do NOT overexplain.
-Do NOT praise unless it is genuinely exceptional.
+Focus on:
+- Generic stock photos
+- Overused trends (Glassmorphism abuse, Neumorphism)
+- Confusing navigation
+- Tiny text no human can read
 
-This is meant to be entertaining, memorable, and brutally educational.
-"""
+End with a verdict that is funny but summarizes the main issue.
+\"\"\"
 }
 
 def handle(event, context):
@@ -160,7 +167,7 @@ def handle(event, context):
 
         # 4. Construct Prompt
         lens_instruction = LENSES.get(lens_id, "")
-        full_system_prompt = f"{BASE_SYSTEM_PROMPT}\n\n--- LENS INSTRUCTION ---\n{lens_instruction}"
+        full_system_prompt = f"{BASE_SYSTEM_PROMPT}\\n\\n--- LENS INSTRUCTION ---\\n{lens_instruction}"
 
         logger.info(f"Analyzing with Lens: {lens_id}")
 
@@ -174,7 +181,7 @@ def handle(event, context):
                     {"type": "image_url", "image_url": {"url": image_url}}
                 ]}
             ],
-            "temperature": 0.5,
+            "temperature": 0.7, # Increased slightly for humor/creativity in Roast Mode
             "max_tokens": 1500
         }
 
@@ -230,3 +237,19 @@ def handle(event, context):
                 "details": "Check Function Logs"
             })
         }
+"""
+
+with open("handler.py", "w") as f:
+    f.write(handler_code)
+
+with open("requirements.txt", "w") as f:
+    f.write("\n") 
+
+with zipfile.ZipFile("deploy_package.zip", "w") as zipf:
+    zipf.write("handler.py")
+    zipf.write("requirements.txt")
+
+print("-" * 30)
+print(f"SUCCESS! Created deploy_package.zip")
+print("Upload this to Scaleway and deploy.")
+print("-" * 30)
