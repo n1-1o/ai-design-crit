@@ -99,6 +99,14 @@ Focus on aesthetics, typography, spacing, and grid.
 Treat this as a visual design review for a senior portfolio.
 Point out misalignment, inconsistent margins, and poor font choices.
 """,
+    "senior": """
+Critique Lens: Senior Crit
+Review this design like a staff-level product design leader.
+Challenge the product logic, flow, and strategic assumptions behind the screen.
+Prioritize the biggest sources of friction, unclear value, and weak decision-making.
+Go beyond visual critique and call out where the experience may fail the user's goal.
+Be direct, rigorous, and specific.
+""",
     "roast": """
 Critique Lens: Roast Mode
 

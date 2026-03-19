@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design Crit</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <title>AI Design Crit</title>
+    <link rel="icon" href="logo.svg" type="image/svg+xml">
     
     <!-- VERCEL ANALYTICS (Traffic Tracking) -->
     <script>
@@ -166,7 +166,7 @@
     <!-- Sticky Navigation (Background controlled by JS) -->
     <nav id="navbar" class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-50 transition-all duration-300 animate-fade-in-up bg-transparent">
         <a href="/" class="flex items-center gap-3 opacity-90 hover:opacity-100 transition cursor-pointer group">
-            <img src="logo.png" alt="Design Crit Logo" class="w-8 h-8 rounded-full object-cover group-hover:scale-105 transition-transform shadow-sm border border-white/10">
+            <img src="logo.svg" alt="AI Design Crit Logo" class="w-8 h-8 rounded-full object-cover group-hover:scale-105 transition-transform shadow-sm border border-white/10">
             <span class="font-display font-light tracking-tight text-lg">Design Crit</span>
         </a>
         <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition focus:outline-none text-gray-600 dark:text-gray-400">
@@ -653,8 +653,6 @@
             } catch (err) {
                 console.error('Failed to copy', err);
             }
-            
-            document.body.removeChild(textarea);
         }
 
         function setLoadingState(isLoading) {
