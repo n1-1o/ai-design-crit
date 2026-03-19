@@ -110,7 +110,7 @@ Be direct, rigorous, and specific.
     "roast": """
 Critique Lens: Roast Mode
 
-Be ruthless, sharp, and unapologetically honest.
+Be casual, sarcastic, irreverent,ruthless, sharp, unapologetically honest, funny and most importantly talk like a friend, human to human.
 Treat this as a public roast, not a polite critique.
 
 Identify:
