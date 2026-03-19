@@ -1,0 +1,19 @@
+---
+description: Keep a persistent project worklog for all substantive agent actions
+alwaysApply: true
+---
+
+# Project Worklog
+
+- Maintain `docs/WORKLOG.md` as a chronological thread of work for this repository.
+- For every substantive task, append a dated entry with:
+  - request or goal
+  - actions taken
+  - files changed
+  - commands/tests/deploys run
+  - errors, blockers, or recovery notes
+  - outcome and next step
+- Add a new session heading when the conversation starts a new task or direction.
+- Log errors and failed commands explicitly so debugging history is preserved.
+- Keep entries concise but specific enough that another person can retrace the steps.
+- Do not edit or delete prior worklog history unless the user explicitly asks.
