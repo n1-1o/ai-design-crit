@@ -108,3 +108,22 @@ Each session records the goal, actions, files touched, commands, issues, and out
   - `git push origin main`
 - Errors, blockers, or recovery notes: none
 - Outcome and next step: GitHub `main` updated; next step is to verify the roast mode behavior in the app if needed.
+
+## 2026-04-10
+
+### Session: Commit and push requirements + deploy package
+- Goal: commit and push all local changes to GitHub.
+- Actions:
+  - reviewed `git status` and `git diff` (modified `requirements.txt`, `deploy_package.zip`)
+  - appended this worklog entry
+  - staged, committed, and pushed to `origin/main`
+- Files changed:
+  - `requirements.txt` (cleared; aligns with stdlib-only Scaleway handler)
+  - `deploy_package.zip` (regenerated/smaller package)
+  - `docs/WORKLOG.md`
+- Commands run:
+  - `git status --short --branch`
+  - `git add requirements.txt deploy_package.zip docs/WORKLOG.md`
+  - `git commit -m "chore: sync requirements and deploy package"`
+  - `git push origin main`
+- Outcome: pending push result in session.
